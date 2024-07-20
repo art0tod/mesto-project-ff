@@ -17,7 +17,7 @@ const createCard = (card, deleteCard) => {
 
   deleteCardButton.addEventListener('click', deleteCard)
 
-  placesList.append(cardNode)
+  return cardNode
 }
 
 // Функция удаления карточки
@@ -27,6 +27,7 @@ const deleteCard = evt => {
 }
 
 // Вывод всех карточек на страницу
-initialCards.forEach(item => {
-  createCard(item, deleteCard)
+initialCards.forEach(element => {
+  const cardElement = createCard(element, deleteCard)
+  placesList.append(cardElement)
 })
