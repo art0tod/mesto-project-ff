@@ -1,36 +1,42 @@
+import { createCard } from '../components/card'
+import {
+  closeModal,
+  closeModalViaOverlay,
+  openModal,
+} from '../components/modal'
 import '../pages/index.css'
 import { initialCards } from './cards'
 
-// Темплейт карточки
-const cardTemplate = document.querySelector('#card-template').content
-
-// DOM узлы
+const profileAddButton = document.querySelector('.profile__add-button')
+const profileEditButton = document.querySelector('.profile__edit-button')
+const popupTypeNewCard = document.querySelector('.popup_type_new-card')
+const popupTypeEdit = document.querySelector('.popup_type_edit')
+const popupTypeImage = document.querySelector('.popup_type_image')
+const popupCloseButtons = document.querySelectorAll('.popup__close')
 const placesList = document.querySelector('.places__list')
 
-// Функция создания карточки
-const createCard = (card, deleteCard) => {
-  const cardNode = cardTemplate.querySelector('.card').cloneNode(true)
-  const deleteCardButton = cardNode.querySelector('.card__delete-button')
-  const cardImage = cardNode.querySelector('.card__image')
-  const cardTitle = cardNode.querySelector('.card__title')
+profileAddButton.addEventListener('click', () => openModal(popupTypeNewCard))
+profileEditButton.addEventListener('click', () => openModal(popupTypeEdit))
 
-  cardImage.src = card.link
-  cardImage.alt = card.name
-  cardTitle.textContent = card.name
+popupCloseButtons.forEach(button => {
+  const popup = button.closest('.popup')
+  button.addEventListener('click', () => closeModal(popup))
+  closeModalViaOverlay(popup)
+})
 
-  deleteCardButton.addEventListener('click', deleteCard)
+const handleCardClick = evt => {
+  const cardImage = evt.target
+  const popupImage = popupTypeImage.querySelector('.popup__image')
+  const popupCaption = popupTypeImage.querySelector('.popup__caption')
 
-  return cardNode
+  popupImage.src = cardImage.src
+  popupImage.alt = cardImage.alt
+  popupCaption.textContent = cardImage.alt
+
+  openModal(popupTypeImage)
 }
 
-// Функция удаления карточки
-const deleteCard = evt => {
-  const cardElement = evt.target.closest('.card')
-  if (cardElement) cardElement.remove()
-}
-
-// Вывод всех карточек на страницу
-initialCards.forEach(element => {
-  const cardElement = createCard(element, deleteCard)
+initialCards.forEach(card => {
+  const cardElement = createCard(card, handleCardClick)
   placesList.append(cardElement)
 })
