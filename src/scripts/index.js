@@ -53,8 +53,12 @@ const handleCardClick = evt => {
   openModal(popupTypeImage)
 }
 
+const handleCardLike = evt => {
+  evt.target.classList.toggle('card__like-button_is-active')
+}
+
 initialCards.forEach(card => {
-  const cardElement = createCard(card, handleCardClick)
+  const cardElement = createCard(card, handleCardClick, handleCardLike)
   placesList.append(cardElement)
 })
 
