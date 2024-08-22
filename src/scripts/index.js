@@ -14,14 +14,20 @@ const popupTypeEdit = document.querySelector('.popup_type_edit')
 const popupTypeImage = document.querySelector('.popup_type_image')
 const popupCloseButtons = document.querySelectorAll('.popup__close')
 const placesList = document.querySelector('.places__list')
-
 const editProfileForm = document.forms['edit-profile']
 const editProfileName = editProfileForm.name
 const editProfileJob = editProfileForm.description
 const profileName = document.querySelector('.profile__title')
 const profileJob = document.querySelector('.profile__description')
+const addCardForm = document.forms['new-place']
+const addCardName = addCardForm['place-name']
+const addCardURL = addCardForm['link']
 
-profileAddButton.addEventListener('click', () => openModal(popupTypeNewCard))
+profileAddButton.addEventListener('click', () => {
+  openModal(popupTypeNewCard)
+  addCardName.focus()
+})
+
 profileEditButton.addEventListener('click', () => {
   openModal(popupTypeEdit)
   editProfileName.focus()
@@ -52,7 +58,6 @@ initialCards.forEach(card => {
   placesList.append(cardElement)
 })
 
-/*--ProfileForm--*/
 const handleEditProfileFormSubmit = evt => {
   evt.preventDefault()
 
@@ -65,4 +70,18 @@ const handleEditProfileFormSubmit = evt => {
   closeModal(popupTypeEdit)
 }
 
+const handleAddCardFormSubmit = evt => {
+  evt.preventDefault()
+
+  const name = addCardName.value
+  const link = addCardURL.value
+
+  const cardElement = createCard({ name, link }, handleCardClick)
+  placesList.prepend(cardElement)
+
+  closeModal(popupTypeNewCard)
+  addCardForm.reset()
+}
+
 editProfileForm.addEventListener('submit', handleEditProfileFormSubmit)
+addCardForm.addEventListener('submit', handleAddCardFormSubmit)
