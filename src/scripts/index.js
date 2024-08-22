@@ -80,7 +80,11 @@ const handleAddCardFormSubmit = evt => {
   const name = addCardName.value
   const link = addCardURL.value
 
-  const cardElement = createCard({ name, link }, handleCardClick)
+  const cardElement = createCard(
+    { name, link },
+    handleCardClick,
+    handleCardLike
+  )
   placesList.prepend(cardElement)
 
   closeModal(popupTypeNewCard)
