@@ -15,8 +15,19 @@ const popupTypeImage = document.querySelector('.popup_type_image')
 const popupCloseButtons = document.querySelectorAll('.popup__close')
 const placesList = document.querySelector('.places__list')
 
+const editProfileForm = document.forms['edit-profile']
+const editProfileName = editProfileForm.name
+const editProfileJob = editProfileForm.description
+const profileName = document.querySelector('.profile__title')
+const profileJob = document.querySelector('.profile__description')
+
 profileAddButton.addEventListener('click', () => openModal(popupTypeNewCard))
-profileEditButton.addEventListener('click', () => openModal(popupTypeEdit))
+profileEditButton.addEventListener('click', () => {
+  openModal(popupTypeEdit)
+  editProfileName.focus()
+  editProfileName.value = profileName.textContent
+  editProfileJob.value = profileJob.textContent
+})
 
 popupCloseButtons.forEach(button => {
   const popup = button.closest('.popup')
@@ -40,3 +51,18 @@ initialCards.forEach(card => {
   const cardElement = createCard(card, handleCardClick)
   placesList.append(cardElement)
 })
+
+/*--ProfileForm--*/
+const handleEditProfileFormSubmit = evt => {
+  evt.preventDefault()
+
+  const name = editProfileName.value
+  const job = editProfileJob.value
+
+  profileName.textContent = name
+  profileJob.textContent = job
+
+  closeModal(popupTypeEdit)
+}
+
+editProfileForm.addEventListener('submit', handleEditProfileFormSubmit)
