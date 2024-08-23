@@ -1,4 +1,4 @@
-import { createCard } from '../components/card'
+import { createCard, deleteCard } from '../components/card'
 import {
   closeModal,
   closeModalViaOverlay,
@@ -12,6 +12,8 @@ const profileEditButton = document.querySelector('.profile__edit-button')
 const popupTypeNewCard = document.querySelector('.popup_type_new-card')
 const popupTypeEdit = document.querySelector('.popup_type_edit')
 const popupTypeImage = document.querySelector('.popup_type_image')
+const popupImage = popupTypeImage.querySelector('.popup__image')
+const popupCaption = popupTypeImage.querySelector('.popup__caption')
 const popupCloseButtons = document.querySelectorAll('.popup__close')
 const placesList = document.querySelector('.places__list')
 const editProfileForm = document.forms['edit-profile']
@@ -43,8 +45,6 @@ popupCloseButtons.forEach(button => {
 
 const handleCardClick = evt => {
   const cardImage = evt.target
-  const popupImage = popupTypeImage.querySelector('.popup__image')
-  const popupCaption = popupTypeImage.querySelector('.popup__caption')
 
   popupImage.src = cardImage.src
   popupImage.alt = cardImage.alt
@@ -58,7 +58,12 @@ const handleCardLike = evt => {
 }
 
 initialCards.forEach(card => {
-  const cardElement = createCard(card, handleCardClick, handleCardLike)
+  const cardElement = createCard(
+    card,
+    handleCardClick,
+    handleCardLike,
+    deleteCard
+  )
   placesList.append(cardElement)
 })
 
@@ -83,7 +88,8 @@ const handleAddCardFormSubmit = evt => {
   const cardElement = createCard(
     { name, link },
     handleCardClick,
-    handleCardLike
+    handleCardLike,
+    deleteCard
   )
   placesList.prepend(cardElement)
 

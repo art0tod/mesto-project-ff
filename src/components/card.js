@@ -1,4 +1,9 @@
-export const createCard = (card, handleImageClick, handleCardLike) => {
+export const createCard = (
+  card,
+  handleImageClick,
+  handleCardLike,
+  handleCardDelete
+) => {
   const cardTemplate = document.querySelector('#card-template').content
   const cardNode = cardTemplate.querySelector('.card').cloneNode(true)
   const deleteCardButton = cardNode.querySelector('.card__delete-button')
@@ -10,14 +15,14 @@ export const createCard = (card, handleImageClick, handleCardLike) => {
   cardImage.alt = card.name
   cardTitle.textContent = card.name
 
-  deleteCardButton.addEventListener('click', deleteCard)
+  deleteCardButton.addEventListener('click', handleCardDelete)
   cardImage.addEventListener('click', handleImageClick)
   cardLikeButton.addEventListener('click', handleCardLike)
 
   return cardNode
 }
 
-const deleteCard = evt => {
+export const deleteCard = evt => {
   const cardElement = evt.target.closest('.card')
   if (cardElement) cardElement.remove()
 }
