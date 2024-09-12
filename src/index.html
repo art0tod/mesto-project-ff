@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ru">
   <head>
     <meta charset="UTF-8" />
@@ -46,17 +46,21 @@
             <input
               type="text"
               name="name"
+              id="name"
               class="popup__input popup__input_type_name"
               placeholder="Имя"
               required
             />
+            <span class="form__input-error name-input-error"></span>
             <input
               type="text"
               name="description"
+              id="description"
               class="popup__input popup__input_type_description"
               placeholder="Занятие"
               required
             />
+            <span class="form__input-error description-input-error"></span>
             <button type="submit" class="button popup__button">
               Сохранить
             </button>
@@ -71,17 +75,21 @@
             <input
               type="text"
               name="place-name"
+              id="place-name"
               class="popup__input popup__input_type_card-name"
               placeholder="Название"
               required
             />
+            <span class="form__input-error place-name-input-error"></span>
             <input
               type="url"
               name="link"
+              id="link"
               class="popup__input popup__input_type_url"
               placeholder="Ссылка на картинку"
               required
             />
+            <span class="form__input-error link-input-error"></span>
             <button type="submit" class="button popup__button">
               Сохранить
             </button>

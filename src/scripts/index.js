@@ -4,6 +4,7 @@ import {
   closeModalViaOverlay,
   openModal,
 } from '../components/modal'
+import { enableValidation } from '../components/validation'
 import '../pages/index.css'
 import { initialCards } from './cards'
 
@@ -66,6 +67,8 @@ initialCards.forEach(card => {
   )
   placesList.append(cardElement)
 })
+
+enableValidation()
 
 const handleEditProfileFormSubmit = evt => {
   evt.preventDefault()
