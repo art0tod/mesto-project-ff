@@ -1,4 +1,10 @@
 function checkInputValidity(formElement, inputElement) {
+  if (inputElement.validity.patternMismatch) {
+    inputElement.setCustomValidity(inputElement.dataset.error)
+  } else {
+    inputElement.setCustomValidity('')
+  }
+
   if (!inputElement.validity.valid) {
     showInputError(formElement, inputElement, inputElement.validationMessage)
   } else {
@@ -68,4 +74,14 @@ export function enableValidation() {
     })
     setEventListeners(formElement)
   })
+}
+
+export function clearValidation(formElement) {
+  const inputList = Array.from(formElement.querySelectorAll('.popup__input'))
+
+  inputList.forEach(inputElement => {
+    hideInputError(formElement, inputElement)
+  })
+
+  toggleButtonState(formElement)
 }

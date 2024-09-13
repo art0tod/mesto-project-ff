@@ -4,7 +4,7 @@ import {
   closeModalViaOverlay,
   openModal,
 } from '../components/modal'
-import { enableValidation } from '../components/validation'
+import { clearValidation, enableValidation } from '../components/validation'
 import '../pages/index.css'
 import { initialCards } from './cards'
 
@@ -29,6 +29,7 @@ const addCardURL = addCardForm['link']
 profileAddButton.addEventListener('click', () => {
   openModal(popupTypeNewCard)
   addCardName.focus()
+  clearValidation(addCardForm)
 })
 
 profileEditButton.addEventListener('click', () => {
@@ -36,6 +37,7 @@ profileEditButton.addEventListener('click', () => {
   editProfileName.focus()
   editProfileName.value = profileName.textContent
   editProfileJob.value = profileJob.textContent
+  clearValidation(editProfileForm)
 })
 
 popupCloseButtons.forEach(button => {
@@ -67,8 +69,6 @@ initialCards.forEach(card => {
   )
   placesList.append(cardElement)
 })
-
-enableValidation()
 
 const handleEditProfileFormSubmit = evt => {
   evt.preventDefault()
@@ -102,3 +102,5 @@ const handleAddCardFormSubmit = evt => {
 
 editProfileForm.addEventListener('submit', handleEditProfileFormSubmit)
 addCardForm.addEventListener('submit', handleAddCardFormSubmit)
+
+enableValidation()
