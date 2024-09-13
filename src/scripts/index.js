@@ -26,10 +26,19 @@ const addCardForm = document.forms['new-place']
 const addCardName = addCardForm['place-name']
 const addCardURL = addCardForm['link']
 
+const validationConfig = {
+  formSelector: '.popup__form',
+  inputSelector: '.popup__input',
+  submitButtonSelector: '.popup__button',
+  disabledButtonClass: 'popup__button_disabled',
+  inputErrorClass: 'popup__input_type_error',
+  errorClass: 'popup__input-error_active',
+}
+
 profileAddButton.addEventListener('click', () => {
   openModal(popupTypeNewCard)
   addCardName.focus()
-  clearValidation(addCardForm)
+  clearValidation(addCardForm, validationConfig)
 })
 
 profileEditButton.addEventListener('click', () => {
@@ -37,7 +46,7 @@ profileEditButton.addEventListener('click', () => {
   editProfileName.focus()
   editProfileName.value = profileName.textContent
   editProfileJob.value = profileJob.textContent
-  clearValidation(editProfileForm)
+  clearValidation(editProfileForm, validationConfig)
 })
 
 popupCloseButtons.forEach(button => {
@@ -103,4 +112,4 @@ const handleAddCardFormSubmit = evt => {
 editProfileForm.addEventListener('submit', handleEditProfileFormSubmit)
 addCardForm.addEventListener('submit', handleAddCardFormSubmit)
 
-enableValidation()
+enableValidation(validationConfig)
