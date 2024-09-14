@@ -1,4 +1,5 @@
-import { createCard, deleteCard } from '../components/card'
+import * as API from '../components/api'
+import { createCard } from '../components/card'
 import {
   closeModal,
   closeModalViaOverlay,
@@ -6,7 +7,6 @@ import {
 } from '../components/modal'
 import { clearValidation, enableValidation } from '../components/validation'
 import '../pages/index.css'
-import { initialCards } from './cards'
 
 const profileAddButton = document.querySelector('.profile__add-button')
 const profileEditButton = document.querySelector('.profile__edit-button')
@@ -22,9 +22,14 @@ const editProfileName = editProfileForm.name
 const editProfileJob = editProfileForm.description
 const profileName = document.querySelector('.profile__title')
 const profileJob = document.querySelector('.profile__description')
+const profileImage = document.querySelector('.profile__image')
 const addCardForm = document.forms['new-place']
 const addCardName = addCardForm['place-name']
 const addCardURL = addCardForm['link']
+const popupAvatarUpdate = document.querySelector('.popup_type_edit-avatar')
+const editAvatarForm = document.forms['edit-avatar']
+const editAvatarUrl = editAvatarForm.link
+let currentUserId = null
 
 const validationConfig = {
   formSelector: '.popup__form',
@@ -34,6 +39,11 @@ const validationConfig = {
   inputErrorClass: 'popup__input_type_error',
   errorClass: 'popup__input-error_active',
 }
+
+profileImage.addEventListener('click', () => {
+  openModal(popupAvatarUpdate)
+  editAvatarUrl.focus()
+})
 
 profileAddButton.addEventListener('click', () => {
   openModal(popupTypeNewCard)
@@ -65,19 +75,59 @@ const handleCardClick = evt => {
   openModal(popupTypeImage)
 }
 
-const handleCardLike = evt => {
-  evt.target.classList.toggle('card__like-button_is-active')
+const handleCardLike = (cardId, evt, updateLikes) => {
+  API.likeCard(cardId)
+    .then(card => {
+      updateLikes(card.likes)
+    })
+    .catch(err => console.error(err))
 }
 
-initialCards.forEach(card => {
-  const cardElement = createCard(
-    card,
-    handleCardClick,
-    handleCardLike,
-    deleteCard
-  )
-  placesList.append(cardElement)
-})
+const handleCardUnLike = (cardId, evt, updateLikes) => {
+  API.unlikeCard(cardId)
+    .then(card => {
+      updateLikes(card.likes)
+    })
+    .catch(err => console.error(err))
+}
+
+const handleCardDelete = (cardId, evt) => {
+  API.deleteCard(cardId)
+    .then(() => {
+      const cardElement = evt.target.closest('.card')
+      if (cardElement) cardElement.remove()
+    })
+    .catch(err => console.error(err))
+}
+
+const initialAPIRequests = () => {
+  API.getProfile()
+    .then(data => {
+      profileName.textContent = data.name
+      profileJob.textContent = data.about
+      profileImage.style = `background-image: url('${data.avatar}')`
+
+      currentUserId = data._id
+    })
+    .then(() =>
+      API.getCards()
+        .then(cards => {
+          cards.forEach(card => {
+            const cardElement = createCard(
+              card,
+              handleCardClick,
+              handleCardLike,
+              handleCardUnLike,
+              handleCardDelete,
+              currentUserId
+            )
+            placesList.append(cardElement)
+          })
+        })
+        .catch(err => console.error(err))
+    )
+    .catch(err => console.error(err))
+}
 
 const handleEditProfileFormSubmit = evt => {
   evt.preventDefault()
@@ -85,8 +135,12 @@ const handleEditProfileFormSubmit = evt => {
   const name = editProfileName.value
   const job = editProfileJob.value
 
-  profileName.textContent = name
-  profileJob.textContent = job
+  API.editProfile(name, job)
+    .then(data => {
+      profileName.textContent = data.name
+      profileJob.textContent = data.about
+    })
+    .catch(err => console.error(err))
 
   closeModal(popupTypeEdit)
 }
@@ -97,19 +151,46 @@ const handleAddCardFormSubmit = evt => {
   const name = addCardName.value
   const link = addCardURL.value
 
-  const cardElement = createCard(
-    { name, link },
-    handleCardClick,
-    handleCardLike,
-    deleteCard
-  )
-  placesList.prepend(cardElement)
+  if (currentUserId) {
+    API.addCard(name, link)
+      .then(data => {
+        const cardElement = createCard(
+          data,
+          handleCardClick,
+          handleCardLike,
+          handleCardUnLike,
+          handleCardDelete,
+          currentUserId
+        )
+        placesList.prepend(cardElement)
+        addCardForm.reset()
+      })
+      .catch(err => console.error(err))
+      .finally(() => {
+        closeModal(popupTypeNewCard)
+      })
+  }
+}
 
-  closeModal(popupTypeNewCard)
-  addCardForm.reset()
+const handleEditAvatarSubmit = evt => {
+  evt.preventDefault()
+
+  const link = editAvatarUrl.value
+
+  if (currentUserId) {
+    API.editAvatar(link)
+      .then(data => {
+        profileImage.style = `background-image: url('${data.avatar}')`
+        closeModal(popupAvatarUpdate)
+      })
+      .catch(err => console.error(err))
+  }
 }
 
 editProfileForm.addEventListener('submit', handleEditProfileFormSubmit)
 addCardForm.addEventListener('submit', handleAddCardFormSubmit)
+editAvatarForm.addEventListener('submit', handleEditAvatarSubmit)
 
 enableValidation(validationConfig)
+
+initialAPIRequests()
