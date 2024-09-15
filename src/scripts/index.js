@@ -209,8 +209,8 @@ const handleEditAvatarSubmit = evt => {
       })
       .catch(err => console.error(err))
       .finally(() => {
-        closeModal(popupAvatarUpdate)
         setLoadingStatus(false)
+        closeModal(popupAvatarUpdate)
       })
   }
 }
