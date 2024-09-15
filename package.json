@@ -4,7 +4,9 @@
   "description": "",
   "scripts": {
     "build": "webpack --mode production",
-    "dev": "webpack serve"
+    "dev": "webpack serve",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dist"
   },
   "repository": {
     "type": "git",
@@ -25,6 +27,7 @@
     "css-loader": "^7.1.2",
     "cssnano": "^7.0.5",
     "file-loader": "^6.2.0",
+    "gh-pages": "^6.1.1",
     "html-loader": "^5.1.0",
     "html-webpack-plugin": "^5.6.0",
     "mini-css-extract-plugin": "^2.9.0",

@@ -15,3 +15,4 @@
 ## Ссылки 🔗
 
 - Репозиторий GitHub: [github.com/art0tod/mesto-project-ff](https://github.com/art0tod/mesto-project-ff/)
+- Сборка сайта на GitHub Pages: [art0tod.github.io/mesto-project-ff](https://art0tod.github.io/mesto-project-ff/)
