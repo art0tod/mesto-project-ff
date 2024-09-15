@@ -40,6 +40,22 @@ const validationConfig = {
   errorClass: 'popup__input-error_active',
 }
 
+const setLoadingStatus = isLoading => {
+  const popup = document.querySelector('.popup_is-opened')
+
+  if (popup) {
+    const button = popup.querySelector('.popup__button')
+
+    if (isLoading) {
+      button.disabled = true
+      button.textContent = 'Сохранение...'
+    } else {
+      button.disabled = false
+      button.textContent = 'Сохраненить'
+    }
+  }
+}
+
 profileImage.addEventListener('click', () => {
   openModal(popupAvatarUpdate)
   editAvatarUrl.focus()
@@ -132,6 +148,8 @@ const initialAPIRequests = () => {
 const handleEditProfileFormSubmit = evt => {
   evt.preventDefault()
 
+  setLoadingStatus(true)
+
   const name = editProfileName.value
   const job = editProfileJob.value
 
@@ -141,12 +159,16 @@ const handleEditProfileFormSubmit = evt => {
       profileJob.textContent = data.about
     })
     .catch(err => console.error(err))
-
-  closeModal(popupTypeEdit)
+    .finally(() => {
+      setLoadingStatus(false)
+      closeModal(popupTypeEdit)
+    })
 }
 
 const handleAddCardFormSubmit = evt => {
   evt.preventDefault()
+
+  setLoadingStatus(true)
 
   const name = addCardName.value
   const link = addCardURL.value
@@ -167,6 +189,7 @@ const handleAddCardFormSubmit = evt => {
       })
       .catch(err => console.error(err))
       .finally(() => {
+        setLoadingStatus(false)
         closeModal(popupTypeNewCard)
       })
   }
@@ -175,15 +198,20 @@ const handleAddCardFormSubmit = evt => {
 const handleEditAvatarSubmit = evt => {
   evt.preventDefault()
 
+  setLoadingStatus(true)
+
   const link = editAvatarUrl.value
 
   if (currentUserId) {
     API.editAvatar(link)
       .then(data => {
         profileImage.style = `background-image: url('${data.avatar}')`
-        closeModal(popupAvatarUpdate)
       })
       .catch(err => console.error(err))
+      .finally(() => {
+        closeModal(popupAvatarUpdate)
+        setLoadingStatus(false)
+      })
   }
 }
 
