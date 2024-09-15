@@ -51,7 +51,7 @@ const setLoadingStatus = isLoading => {
       button.textContent = 'Сохранение...'
     } else {
       button.disabled = false
-      button.textContent = 'Сохраненить'
+      button.textContent = 'Сохранить'
     }
   }
 }
