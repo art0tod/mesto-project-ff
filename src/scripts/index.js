@@ -116,6 +116,22 @@ const handleCardDelete = (cardId, evt) => {
     .catch(err => console.error(err))
 }
 
+const handleCardLikeToggle = (cardId, evt, updateLikes, isLiked) => {
+  if (isLiked) {
+    API.unlikeCard(cardId)
+      .then(card => {
+        updateLikes(card.likes)
+      })
+      .catch(err => console.error(err))
+  } else {
+    API.likeCard(cardId)
+      .then(card => {
+        updateLikes(card.likes)
+      })
+      .catch(err => console.error(err))
+  }
+}
+
 const initialAPIRequests = () => {
   API.getProfile()
     .then(data => {
@@ -132,8 +148,7 @@ const initialAPIRequests = () => {
             const cardElement = createCard(
               card,
               handleCardClick,
-              handleCardLike,
-              handleCardUnLike,
+              handleCardLikeToggle,
               handleCardDelete,
               currentUserId
             )
@@ -179,8 +194,7 @@ const handleAddCardFormSubmit = evt => {
         const cardElement = createCard(
           data,
           handleCardClick,
-          handleCardLike,
-          handleCardUnLike,
+          handleCardLikeToggle,
           handleCardDelete,
           currentUserId
         )

@@ -1,8 +1,7 @@
 export const createCard = (
   card,
   handleImageClick,
-  handleCardLike,
-  handleCardUnLike,
+  handleCardLikeToggle,
   handleCardDelete,
   currentUserId
 ) => {
@@ -35,10 +34,11 @@ export const createCard = (
   cardImage.addEventListener('click', handleImageClick)
 
   cardLikeButton.addEventListener('click', evt => {
-    cardLikeButton.classList.contains('card__like-button_is-active')
-      ? handleCardUnLike(card._id, evt, updateLikes)
-      : handleCardLike(card._id, evt, updateLikes)
-    cardLikesCount.textContent = card.likes.length
+    const isLiked = cardLikeButton.classList.contains(
+      'card__like-button_is-active'
+    )
+
+    handleCardLikeToggle(card._id, evt, updateLikes, isLiked)
   })
 
   currentUserId === card.owner._id
